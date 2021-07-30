@@ -39,8 +39,21 @@ const {
 
 var isAncestor = function(genealogyTree, ancestor, descendant){
   // Tu código aca:
-
+  if (genealogyTree[ancestor].length <= 0) {
+    return false;
+  }
+  for (let m = 0; m < genealogyTree[ancestor].length; m++) {
+    let tree = genealogyTree[ancestor][m];
+    if (tree === descendant) {
+      return true;
+    }
+    if (genealogyTree[tree].length > 0) {
+      return isAncestor(genealogyTree, tree, descendant);
+    }
+  }
+  return false;
 }
+
 
 
 // EJERCICIO 2
@@ -77,7 +90,16 @@ var isAncestor = function(genealogyTree, ancestor, descendant){
 
 function secuenciaHenry(obj, n) {
   // Tu código aca:
-
+  if (n < 0){
+    return null;
+  }
+  if (n === 0){
+     return obj.first;
+  }
+  if (n === 1){
+    return Object.keys(obj).length;
+  } 
+  return (secuenciaHenry(obj, n - 1) * secuenciaHenry(obj, n - 2)) - secuenciaHenry(obj, n - 2);
 }
 
 // ---------------------
@@ -98,6 +120,17 @@ function secuenciaHenry(obj, n) {
 
 LinkedList.prototype.size = function(){
   // Tu código aca:
+   let contador = 0;
+  if (this.head === null) {
+    return 0;
+  } else {
+    var actual = this.head;
+    while (actual.next) {
+      contador += 1;
+      actual = actual.next;
+    }
+    return (contador + 1);
+  }
 
 }
 
@@ -183,7 +216,6 @@ var mergeLinkedLists = function(linkedListOne, linkedListTwo){
 
 var cardGame = function(playerOneCards, playerTwoCards){
   // Tu código aca:
-
 }
 
 // ---------------
@@ -207,7 +239,31 @@ var cardGame = function(playerOneCards, playerTwoCards){
 
 BinarySearchTree.prototype.height = function(){
   // Tu código aca:
+  // si no hay mas nodos
+  if (!this.value) {
+    return 0;
+  }
 
+  // si el arbol solo tiene 1 nivel
+  if (this.left === null && this.right === null) {
+    return 1;
+  }
+
+  // verifico hasta donde la rama izquierda se corta
+  if (this.left === null) {
+    return 1 + this.right.height();
+  }
+
+  // verifico hasta donde la rama derecha se corta
+  if (this.right === null) {
+    return 1 + this.left.height();
+  }
+
+  // paso la mas larga con Math.max
+  var derecha = this.left.height()
+  var izquierda = this.right.height()
+
+  return 1 + Math.max(derecha, izquierda)
 }
 
 
@@ -229,7 +285,24 @@ BinarySearchTree.prototype.height = function(){
 
 var binarySearch = function (array, target) {
   // Tu código aca:
+  var inico = 0;
+  var ultimo = array.length - 1;
+  var posicion = -1;
+  var encontrado = false;
+  var medio;
 
+  while (encontrado === false && inico <= ultimo) {
+    medio = Math.floor((inico + ultimo) / 2);
+    if (array[medio] == target) {
+      encontrado = true;
+      posicion = medio;
+    } else if (array[medio] > target) {
+      ultimo = medio - 1;
+    } else {
+      inico = medio + 1;
+    }
+  }
+  return posicion;
 }
 
 // EJERCICIO 9
@@ -246,7 +319,7 @@ var binarySearch = function (array, target) {
 // ]
 //
 // orderFunction(array[0], array[1]) --> Devolvera 1 si están bien ordenados o -1 si hay que intercambiarlos
-// Suponiendo que la orderFunction devuelve -1 si la edad del segundo elemento es menor que la del primero
+// Suponiendo que la orderFunction devuelve -1 si la edad del segundo elemento es menor que la del inico
 // specialSort(array, orderFunction) --> Retornaría el siguiente array:
 // [
 //   {name: 'Mati', age: 25, height: 1.77},
